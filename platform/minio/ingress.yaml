@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minio
+  namespace: minio
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - minio.chameleonmountain.com
+        - minio-console.chameleonmountain.com
+      secretName: wildcard-tls
+  rules:
+    - host: minio.chameleonmountain.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: minio-api
+                port:
+                  number: 9000
+    - host: minio-console.chameleonmountain.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: minio-console
+                port:
+                  number: 9001

@@ -6,4 +6,7 @@ resources:
   - secret.yaml
   - pvc.yaml
   - deployment.yaml
-  - service.yaml
+  - service-api.yaml
+  - service-console.yaml
+  - ingress.yaml
+  - wildcard-tls.yaml
