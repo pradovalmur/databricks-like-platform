@@ -21,13 +21,18 @@ spec:
             - /data
             - --console-address
             - ":9001"
-          env:
-            - name: MINIO_ROOT_USER
-              value: admin
-            - name: MINIO_ROOT_PASSWORD
-              value: admin123456
+          envFrom:
+            - secretRef:
+                name: minio-root-credentials
           ports:
-            - containerPort: 9000
-              name: api
-            - containerPort: 9001
-              name: console
+            - name: api
+              containerPort: 9000
+            - name: console
+              containerPort: 9001
+          volumeMounts:
+            - name: minio-data
+              mountPath: /data
+      volumes:
+        - name: minio-data
+          persistentVolumeClaim:
+            claimName: minio-data
