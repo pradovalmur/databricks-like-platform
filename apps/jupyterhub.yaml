@@ -5,6 +5,7 @@ metadata:
   namespace: argocd
 spec:
   project: default
+
   source:
     repoURL: https://hub.jupyter.org/helm-chart/
     chart: jupyterhub
@@ -22,7 +23,6 @@ spec:
                 - admin
             DummyAuthenticator:
               password: "admin123456"
-
           service:
             type: ClusterIP
 
@@ -75,9 +75,11 @@ spec:
         proxy:
           service:
             type: ClusterIP
+
   destination:
     server: https://kubernetes.default.svc
     namespace: jupyterhub
+
   syncPolicy:
     automated:
       prune: true
