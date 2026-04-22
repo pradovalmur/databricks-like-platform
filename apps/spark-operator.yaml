@@ -12,9 +12,7 @@ spec:
     helm:
       releaseName: spark-operator
       values: |
-        sparkJobNamespace: spark-jobs
-        webhook:
-          enable: true
+        sparkJobNamespace: "spark-jobs"
   destination:
     server: https://kubernetes.default.svc
     namespace: spark-operator
