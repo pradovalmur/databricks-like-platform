@@ -1,0 +1,31 @@
+FROM python:3.11-slim
+
+ARG SPARK_VERSION=3.5.1
+ARG HADOOP_VERSION=3
+ARG SPARK_PACKAGE=spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV SPARK_HOME=/opt/spark
+ENV PATH=${SPARK_HOME}/bin:${SPARK_HOME}/sbin:$PATH
+ENV PYSPARK_PYTHON=python3
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y \
+    curl \
+    bash \
+    tini \
+    procps \
+    default-jre-headless \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -fsSL https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/${SPARK_PACKAGE}.tgz \
+    | tar -xz -C /opt && \
+    ln -s /opt/${SPARK_PACKAGE} ${SPARK_HOME}
+
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+WORKDIR /opt/spark/work-dir
+
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["/opt/spark/bin/spark-submit", "--version"]
