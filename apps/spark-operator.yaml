@@ -6,15 +6,15 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://apache.github.io/spark-kubernetes-operator
-    chart: spark-kubernetes-operator
-    targetRevision: 1.6.0
+    repoURL: https://googlecloudplatform.github.io/spark-on-k8s-operator
+    chart: spark-operator
+    targetRevision: 1.1.27
     helm:
       releaseName: spark-operator
       values: |
-        spark:
-          jobNamespaces:
-            - spark-jobs
+        sparkJobNamespace: spark-operator
+        webhook:
+          enable: true
   destination:
     server: https://kubernetes.default.svc
     namespace: spark-operator
