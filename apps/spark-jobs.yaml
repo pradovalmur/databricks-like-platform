@@ -18,3 +18,9 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+  ignoreDifferences:
+  - group: sparkoperator.k8s.io
+    kind: SparkApplication
+    jsonPointers:
+      - /status
+      - /metadata/finalizers
