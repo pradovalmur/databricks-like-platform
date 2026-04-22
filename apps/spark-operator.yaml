@@ -12,11 +12,7 @@ spec:
     helm:
       releaseName: spark-operator
       values: |
-        controller:
-          replicas: 1
-          watchNamespaces:
-            - spark-operator
-            - spark-jobs
+        sparkJobNamespace: spark-jobs
         webhook:
           enable: true
   destination:
