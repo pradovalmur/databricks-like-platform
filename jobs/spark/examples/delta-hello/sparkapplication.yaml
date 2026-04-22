@@ -29,7 +29,7 @@ spec:
     spark.hadoop.fs.s3a.path.style.access: "true"
     spark.hadoop.fs.s3a.impl: org.apache.hadoop.fs.s3a.S3AFileSystem
     spark.hadoop.fs.s3a.connection.ssl.enabled: "false"
-    spark.kubernetes.container.image: ghcr.io/pradovalmur/spark-delta:3.5.1
+    spark.kubernetes.container.image: ghcr.io/pradovalmur/spark-delta:3.5.1-v2
     spark.kubernetes.container.image.pullSecrets: ghcr-secret
     spark.kubernetes.driverEnv.AWS_ACCESS_KEY_ID: admin
     spark.kubernetes.driverEnv.AWS_SECRET_ACCESS_KEY: admin123456
@@ -43,7 +43,7 @@ spec:
       - com.amazonaws:aws-java-sdk-bundle:1.12.262
 
   driver:
-    image: ghcr.io/pradovalmur/spark-delta:3.5.1
+    image: ghcr.io/pradovalmur/spark-delta:3.5.1-v2
     cores: 1
     memory: 1g
     serviceAccount: spark
@@ -54,7 +54,7 @@ spec:
         mountPath: /opt/spark/work-dir
 
   executor:
-    image: ghcr.io/pradovalmur/spark-delta:3.5.1
+    image: ghcr.io/pradovalmur/spark-delta:3.5.1-v2
     instances: 1
     cores: 1
     memory: 1g
