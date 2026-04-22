@@ -6,15 +6,23 @@ metadata:
 spec:
   type: Python
   mode: cluster
+
+  image: ghcr.io/pradovalmur/spark-delta:3.5.1
+  imagePullPolicy: Always
+  imagePullSecrets:
+    - ghcr-secret
+
   sparkVersion: "3.5.1"
+  mainApplicationFile: local:///opt/spark/work-dir/app.py
+
   runtimeVersions:
     sparkVersion: "3.5.1"
     scalaVersion: "2.12"
-  mainApplicationFile: local:///opt/spark/work-dir/app.py
+
   restartPolicy:
     type: Never
+
   sparkConf:
-    spark.kubernetes.container.image.pullSecrets: ghcr-secret
     spark.sql.extensions: io.delta.sql.DeltaSparkSessionExtension
     spark.sql.catalog.spark_catalog: org.apache.spark.sql.delta.catalog.DeltaCatalog
     spark.hadoop.fs.s3a.endpoint: http://minio-api.minio.svc.cluster.local:9000
@@ -22,15 +30,18 @@ spec:
     spark.hadoop.fs.s3a.impl: org.apache.hadoop.fs.s3a.S3AFileSystem
     spark.hadoop.fs.s3a.connection.ssl.enabled: "false"
     spark.kubernetes.container.image: ghcr.io/pradovalmur/spark-delta:3.5.1
+    spark.kubernetes.container.image.pullSecrets: ghcr-secret
     spark.kubernetes.driverEnv.AWS_ACCESS_KEY_ID: admin
     spark.kubernetes.driverEnv.AWS_SECRET_ACCESS_KEY: admin123456
     spark.kubernetes.executorEnv.AWS_ACCESS_KEY_ID: admin
     spark.kubernetes.executorEnv.AWS_SECRET_ACCESS_KEY: admin123456
+
   deps:
     packages:
       - io.delta:delta-spark_2.12:3.2.0
       - org.apache.hadoop:hadoop-aws:3.3.4
       - com.amazonaws:aws-java-sdk-bundle:1.12.262
+
   driver:
     image: ghcr.io/pradovalmur/spark-delta:3.5.1
     cores: 1
@@ -41,6 +52,7 @@ spec:
     volumeMounts:
       - name: app-volume
         mountPath: /opt/spark/work-dir
+
   executor:
     image: ghcr.io/pradovalmur/spark-delta:3.5.1
     instances: 1
@@ -51,6 +63,7 @@ spec:
     volumeMounts:
       - name: app-volume
         mountPath: /opt/spark/work-dir
+
   volumes:
     - name: app-volume
       configMap:
