@@ -65,13 +65,9 @@ spec:
 
         prePuller:
           hook:
-            image:
-              pullSecrets:
-                - ghcr-secret
-          pause:
-            image:
-              pullSecrets:
-                - ghcr-secret
+            enabled: false
+          continuous:
+            enabled: false
 
         ingress:
           enabled: true
