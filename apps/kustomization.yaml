@@ -5,3 +5,4 @@ resources:
   - minio.yaml
   - spark-operator.yaml
   - spark-jobs.yaml
+  - jupyterhub.yaml

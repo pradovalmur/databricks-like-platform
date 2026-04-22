@@ -1,0 +1,89 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jupyterhub
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://hub.jupyter.org/helm-chart/
+    chart: jupyterhub
+    targetRevision: 4.3.3
+    helm:
+      releaseName: jupyterhub
+      values: |
+        hub:
+          config:
+            JupyterHub:
+              admin_access: true
+              authenticator_class: dummy
+            Authenticator:
+              admin_users:
+                - admin
+            DummyAuthenticator:
+              password: "admin123456"
+
+          service:
+            type: ClusterIP
+
+        singleuser:
+          image:
+            name: ghcr.io/pradovalmur/jupyter-spark
+            tag: 1.0.0
+            pullPolicy: Always
+
+          imagePullSecrets:
+            - name: ghcr-secret
+
+          defaultUrl: /lab
+
+          storage:
+            type: dynamic
+            dynamic:
+              storageClass: hcloud-volumes
+              pvcNameTemplate: claim-{username}
+              volumeNameTemplate: volume-{username}
+              storageAccessModes:
+                - ReadWriteOnce
+              storage: 20Gi
+
+          cpu:
+            guarantee: 0.5
+            limit: 1
+
+          memory:
+            guarantee: 1G
+            limit: 2G
+
+          extraEnv:
+            AWS_ACCESS_KEY_ID: admin
+            AWS_SECRET_ACCESS_KEY: admin123456
+            MLFLOW_S3_ENDPOINT_URL: http://minio-api.minio.svc.cluster.local:9000
+            PYSPARK_PYTHON: python3
+            PYSPARK_DRIVER_PYTHON: python3
+
+        ingress:
+          enabled: true
+          ingressClassName: traefik
+          annotations:
+            traefik.ingress.kubernetes.io/router.entrypoints: websecure
+            traefik.ingress.kubernetes.io/router.tls: "true"
+          hosts:
+            - jupyter.chameleonmountain.com
+          tls:
+            - secretName: wildcard-tls
+              hosts:
+                - jupyter.chameleonmountain.com
+
+        proxy:
+          service:
+            type: ClusterIP
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jupyterhub
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
