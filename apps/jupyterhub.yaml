@@ -32,20 +32,17 @@ spec:
             tag: 1.0.0
             pullPolicy: Always
 
-          imagePullSecrets:
-            - name: ghcr-secret
-
           defaultUrl: /lab
 
           storage:
             type: dynamic
+            capacity: 20Gi
             dynamic:
               storageClass: hcloud-volumes
               pvcNameTemplate: claim-{username}
               volumeNameTemplate: volume-{username}
               storageAccessModes:
                 - ReadWriteOnce
-              storage: 20Gi
 
           cpu:
             guarantee: 0.5
