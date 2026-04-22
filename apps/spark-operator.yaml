@@ -12,7 +12,8 @@ spec:
     helm:
       releaseName: spark-operator
       values: |
-        sparkJobNamespace: "spark-jobs"
+        sparkJobNamespaces:
+          - spark-jobs
   destination:
     server: https://kubernetes.default.svc
     namespace: spark-operator
