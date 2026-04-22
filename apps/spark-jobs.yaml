@@ -11,7 +11,7 @@ spec:
     path: jobs/spark
   destination:
     server: https://kubernetes.default.svc
-    namespace: spark-jobs
+    namespace: spark-operator
   syncPolicy:
     automated:
       prune: true

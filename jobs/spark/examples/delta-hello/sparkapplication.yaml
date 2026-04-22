@@ -2,7 +2,7 @@ apiVersion: spark.apache.org/v1alpha1
 kind: SparkApplication
 metadata:
   name: delta-hello
-  namespace: spark-jobs
+  namespace: spark-operator
 spec:
   type: Python
   mode: cluster
